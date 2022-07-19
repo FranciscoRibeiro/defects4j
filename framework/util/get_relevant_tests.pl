@@ -30,7 +30,7 @@ get_relevant_tests.pl -- determine the set of relevant tests for a set of bugs o
 
 =head1 SYNOPSIS
 
-  get_relevant_tests.pl -p project_id [-b bug_id] [-t tmp_dir] [-o out_dir]
+  get_relevant_tests.pl -p project_id [-b bug_id] [-t tmp_dir] [-o out_dir] [-l|--loaded]
 
 =head1 OPTIONS
 
@@ -54,6 +54,11 @@ The default is F</tmp>.
 The output directory to be used (optional).
 The default is F<relevant_tests> in Defects4J's project directory.
 
+=item B<-l|--loaded>
+
+If enabled, gets relevant tests of loaded classes instead of modified classes (optional).
+Disabled by default.
+
 =back
 
 =head1 DESCRIPTION
@@ -69,7 +74,7 @@ use strict;
 use FindBin;
 use File::Basename;
 use Cwd qw(abs_path);
-use Getopt::Std;
+use Getopt::Long;
 use Pod::Usage;
 
 use lib abs_path("$FindBin::Bin/../core");
@@ -80,13 +85,18 @@ use Project;
 # Process arguments and issue usage message if necessary.
 #
 my %cmd_opts;
-getopts('p:b:t:o:', \%cmd_opts) or pod2usage(1);
+GetOptions(\%cmd_opts,
+	   "p=s",
+	   "b=i",
+	   "t=s",
+	   "o=s",
+	   "loaded") or pod2usage(1);
 
 pod2usage(1) unless defined $cmd_opts{p};
 
 my $PID = $cmd_opts{p};
 my $BID = $cmd_opts{b};
-
+my $TYPE_OF_CLASSES = defined $cmd_opts{loaded} ? "loaded" : "modified";
 
 # Set up project
 my $TMP_DIR = Utils::get_tmp_dir($cmd_opts{t});
@@ -112,9 +122,9 @@ foreach my $id (@ids) {
     $project->compile() or die "Could not compile";
     $project->compile_tests() or die "Could not compile tests";
 
-    # Hash all modified classes
+    # Hash all modified/loaded classes
     my %mod_classes = ();
-    open(IN, "<${project_dir}/modified_classes/${id}.src") or die "Cannot read modified classes";
+    open(IN, "<${project_dir}/$TYPE_OF_CLASSES\_classes/${id}.src") or die "Cannot read $TYPE_OF_CLASSES classes";
     while(<IN>) {
         chomp;
         $mod_classes{$_} = 1;
