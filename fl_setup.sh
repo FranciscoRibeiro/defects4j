@@ -26,4 +26,4 @@ do
 	done
 done
 
-printf "%s\n" "${INPUTS[@]}" | parallel -j 1 -C' ' get_relevant_tests_of_loaded_classes {1} {2}
+printf "%s\n" "${INPUTS[@]}" | parallel -C' ' get_relevant_tests_of_loaded_classes {1} {2}
