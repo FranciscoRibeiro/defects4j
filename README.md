@@ -3,6 +3,21 @@ Defects4J -- version 2.0.0 [![Build Status](https://travis-ci.com/rjust/defects4
 Defects4J is a collection of reproducible bugs and a supporting infrastructure
 with the goal of advancing software engineering research.
 
+About this fork
+---------------
+This fork was created to compute relevant tests of **loaded classes**, as the ones originally provided were for **modified classes**.
+The script `framework/util/get_relevant_tests.pl` was expanded to support that new option, which can be used by calling:
+```
+./get_relevant_tests.pl -p Compress -b 43 -o framework/projects/Compress/relevant_tests_of_loaded_classes --loaded
+```
+
+This exemplifies the step for bug id `43` in the `Compress` project. Replace the project and bug ids according to the subject you wish to analyze.
+The output directory (`-o` switch) can be a different one and the resulting file will be placed there.
+Notice the `--loaded` switch in the end, which enables this new feature.
+
+The `fl_setup.sh` script executes this step for all active bugs in the current version of Defects4J.
+You can run it if you wish to reproduce this step. However, as it may take a considerable time to finish, the resulting files will be made available in each project's directory, i.e. `framework/projects/<project>/relevant_tests_of_loaded_classes`.
+
 Contents of Defects4J
 ================
 
