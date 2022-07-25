@@ -15,8 +15,31 @@ This exemplifies the step for bug id `43` in the `Compress` project. Replace the
 The output directory (`-o` switch) can be a different one and the resulting file will be placed there.
 Notice the `--loaded` switch in the end, which enables this new feature.
 
+### Results and replication
+
 The `fl_setup.sh` script executes this step for all active bugs in the current version of Defects4J.
-You can run it if you wish to reproduce this step. However, as it may take a considerable time to finish, the resulting files will be made available in each project's directory, i.e. `framework/projects/<project>/relevant_tests_of_loaded_classes`.
+You can run it if you wish to reproduce this step. However, as it may take a considerable time to finish, the resulting files are already available in each project's directory, i.e. `framework/projects/<project>/relevant_tests_of_loaded_classes`.
+
+Additionally, you can use the existing Docker image described by the `Dockerfile` to replicate the results (e.g. running the `fl_setup.sh` script inside a Docker container). This should ensure proper execution, as the environment is correctly set up. To build, run:
+
+```
+docker build -t d4j .
+```
+
+And to run an interactive container:
+
+```
+docker run --rm -it d4j
+```
+
+- `--rm` removes the container after it exits (avoids cluttering the host system);
+- `--it` runs an interactive session
+
+To replicate the files (natively or in a Docker container):
+
+```
+./fl_setup.sh
+```
 
 Contents of Defects4J
 ================
